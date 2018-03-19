@@ -1,0 +1,45 @@
+#ifndef CLIENTINFO_H
+#define CLIENTINFO_H
+#include <QString>
+#include <QDate>
+#include <QVector>
+#include <vector>
+
+class ClientInfo
+{
+private :
+    QString adresse;
+    QString ville;
+    int codePostal;
+    QDate dateRdv;
+    int dureeRdv;
+    int priorite;
+    QString tel;
+    QVector<int> id_ressources;
+
+
+public:
+    ClientInfo();
+    ClientInfo(QString n, QString p, QString a, QString v,int CP,QDate drdv, int dureeConsultation, int prio,QString t, QVector<int> * ids);
+    ClientInfo(int dureeConsultation, int prio);
+
+    
+    QString getAdresse() const;
+    void setAdresse(const QString &value);
+    QString getVille() const;
+    void setVille(const QString &value);
+    int getCodePostal() const;
+    void setCodePostal(int value);
+    QDate getDateRdv() const;
+    void setDateRdv(const QDate &value);
+    int getDureeRdv() const;
+    void setDureeRdv(int value);
+    int getPriorite() const;
+    void setPriorite(int value);
+    QString getTel() const;
+    void setTel(const QString &value);
+    QVector<int>* getId_ressources();
+    void setId_ressources(QVector<int> *value1);
+};
+
+#endif // CLIENTINFO_H
