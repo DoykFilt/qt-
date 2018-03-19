@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -136,7 +136,7 @@
           <widget class="QTableView" name="tableViewClient_2"/>
          </item>
          <item>
-          <widget class="QPushButton" name="pushModifierClient">
+          <widget class="QPushButton" name="buttonModifierClient">
            <property name="text">
             <string>Modifier</string>
            </property>

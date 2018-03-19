@@ -11,14 +11,17 @@ AjouterClient::AjouterClient(QWidget *parent) :
     ui->setupUi(this);
     QSqlQuery * query=new QSqlQuery(DB_management::getInstance()->getDb());
 
-     if (query->exec("SELECT Nom, Prenom FROM TRessource"))
-     {
-         while(query->next())
+    if (query->exec("SELECT Nom, Prenom, Id FROM 'TRessource'"
+                         "WHERE Nom != 'Admin'"))
          {
-             listRessources.append(query->value(0).toString()+" "+query->value(1).toString());
+             while(query->next())
+             {
+                 listRessources.append(query->value(0).toString()+" "+query->value(1).toString());
+                 listId.append(query->value(2).toString());
+
+             }
 
          }
-     }
      ui->comboAffectation->addItems(listRessources);
 
 
@@ -46,9 +49,9 @@ void AjouterClient::on_buttonOK_clicked()
         QMessageBox::warning(this,"Erreur","Veuillez donner une date valide");
     else{
         if (controlerClient.ajouterClient(ui->linePrenom->text(), ui->lineNom->text(), ui->lineAdresse->text(),
-                                      ui->lineVille->text(), ui->comboAffectation, ui->dateRDV->date(),
-                                      ui->lineTelephone->text(), ui->spinCP->value(), ui->spinDuree->value(),
-                                      ui->spinPriorite->value(), ui->textCommentaire->document()))
+                                          ui->lineVille->text(),listId.value(ui->comboAffectation->currentIndex()), ui->dateRDV->date(),
+                                          ui->lineTelephone->text(), ui->spinCP->value(), ui->spinDuree->value(),
+                                          ui->spinPriorite->value(), ui->textCommentaire->document()))
         {
             this->accept();
         }

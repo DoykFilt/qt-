@@ -26,6 +26,7 @@ private:
     Ui::AjouterClient *ui;
     ControlerClient controlerClient;
     QStringList listRessources;
+    QStringList listId;
 
 };
 

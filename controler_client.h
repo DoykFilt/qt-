@@ -21,7 +21,7 @@ public:
                        QString qtelephone, int CP, double duree,
                        int priorite, QTextDocument * commentaire);
     void modifierClient(QString ID, QString qprenom, QString qnom,
-                       QString qadresse, QString qville, QComboBox * affectations,
+                       QString qadresse, QString qville, QString affectations,
                        QDate date, QString qtelephone, int CP, double duree,
                        int priorite, QTextDocument * commentaire);
     bool supprimerClient(QString ID);

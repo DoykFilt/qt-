@@ -41,6 +41,7 @@ private slots:
     void on_buttonSupprimerClient_clicked();
 
     void on_buttonSupprimerPersonnel_clicked();
+    void on_buttonModifierClient_clicked();
 
 private:
     Ui::MainWindow *ui;

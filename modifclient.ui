@@ -225,13 +225,6 @@
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QPushButton" name="bouttonAppliquer">
-      <property name="text">
-       <string>Appliquer</string>
-      </property>
-     </widget>
-    </item>
-    <item>
      <widget class="QPushButton" name="bouttonOK">
       <property name="text">
        <string>OK</string>

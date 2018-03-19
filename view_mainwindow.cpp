@@ -46,8 +46,8 @@ MainWindow::MainWindow(QWidget *parent) :
             QStandardItem * ressourceItem = new QStandardItem(itP->getNom());
             ressourceItem->setEditable(false);
             typeItem->appendRow(ressourceItem);*/
-            QLigneArbre * ressourceItem = new QLigneArbre(itP->getID(), itP->getNom());
-            typeItem->appendRow(ressourceItem);
+            //QLigneArbre * ressourceItem = new QLigneArbre(itP->getID(), itP->getNom());
+            //typeItem->appendRow(ressourceItem);
 
         }
     }
@@ -137,7 +137,7 @@ void MainWindow::on_buttonSupprimerPersonnel_clicked()
     if(!index.isValid())
         QMessageBox::warning(this,"Erreur","Veuillez sélectionner un élément");
     else {
-        QVariant data = ui->treeViewPersonnel->currentIndex().data().;
+        QVariant data = ui->treeViewPersonnel->currentIndex().data();
         int id = data.toInt();
         cPersonnel.supprimerPersonnel(id);
 
@@ -183,7 +183,7 @@ void MainWindow::on_buttonModifierClient_clicked()
     if(!ui->tableViewClient_2->currentIndex().isValid())
     {
         QMessageBox::warning(this,"Erreur","Veuillez sélectionner une case ou une ligne");
-    }		  
+    }
 
     QModelIndex currentindex = ui->tableViewClient_2->currentIndex();
     QString id = ui->tableViewClient_2->model()->data( ui->tableViewClient_2->model()->index(currentindex.row(),0)).toString();

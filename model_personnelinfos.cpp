@@ -94,10 +94,10 @@ bool personnelInfos::db_modifier(){
 
     QSqlQuery query(db->getDb());
     query.prepare("UPDATE TRessources Nom = ?, Prenom = ?, IdType = ? WHERE Id = ?");
-    query.addBindValue(0, getNom());
+    /*query.addBindValue(0, getNom());
     query.addBindValue(1, getPrenom());
     query.addBindValue(2, getType());
-    query.addBindValue(3, getID());
+    query.addBindValue(3, getID());*/
 
     bool result = query.exec();
     if(!result)
@@ -112,9 +112,9 @@ bool personnelInfos::db_ajouter(){
 
     QSqlQuery query(db->getDb());
     query.prepare("INSERT INTO TRessources (Nom, Prenom, IdType) VALUES (?, ?, ?");
-    query.addBindValue(0, getNom());
+    /*query.addBindValue(0, getNom());
     query.addBindValue(1, getPrenom());
-    query.addBindValue(2, getType());
+    query.addBindValue(2, getType());*/
 
     bool result = query.exec();
     if(!result)

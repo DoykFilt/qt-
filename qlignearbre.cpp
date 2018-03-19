@@ -2,7 +2,7 @@
 
 
 QLigneArbre::QLigneArbre(int ID, QString label){
-    QStandardItem(label);
+    //QStandardItem(label);
     id = ID;
     setEditable(false);
 }

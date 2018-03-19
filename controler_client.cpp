@@ -22,12 +22,12 @@ bool ControlerClient::ajouterClient(QString qprenom, QString qnom, QString qadre
 }
 
 void ControlerClient::modifierClient(QString ID, QString qprenom, QString qnom,
-                   QString qadresse, QString qville, QComboBox * affectations,
+                   QString qadresse, QString qville, QString  affectations,
                    QDate date, QString qtelephone, int CP, double duree,
                                      int priorite, QTextDocument * commentaire)
 {
     ci.modifierClient(ID,qprenom,qnom,
-                      qadresse, qville,affectations->currentText(),
+                      qadresse, qville,affectations,
                       date, qtelephone,CP,duree,
                                         priorite,commentaire->toPlainText());
 }
