@@ -165,7 +165,7 @@ bool ClientInfos::modifierClient(QString Id, QString qprenom, QString qnom, QStr
 
     if(query.exec("UPDATE TClient "
                   "SET Nom = '"+qnom+"', Prenom = '"+qprenom+"', Adresse = '"+qadresse+"', Ville = '"+qville+"', CP = "+QString::number(CP)+", Commentaire = '"+commentaire+"', Tel = '"+qtelephone+"', DateRdv = '"+date.toString(QString("yyyy-MM-dd"))+"', DureeRdv = "+QString::number(duree)+", Priorite "+QString::number(priorite)+" "
-                  "WHERE Id = "+Id))
+                  "WHERE Id = "+Id+";"))
     {
         return true;
     }
