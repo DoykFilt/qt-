@@ -26,7 +26,19 @@ ModifClient::ModifClient(QWidget *parent, QString id) :
              }
 
          }
-    ui->comboAffectation->addItems(listRessources);
+    ui->listWidgetAffectation->addItems(listRessources);
+    ui->listWidgetAffectation->setSelectionMode(QAbstractItemView::MultiSelection);
+    if(query->exec("SELECT IdRessource FROM 'TRdv'"
+                   "WHERE IdClient = "+IdClient))
+    {
+        while(query->next())
+        {
+            QString value=query->value(0).toString();
+            ui->listWidgetAffectation->item(listId.indexOf(value))->setSelected(true);
+        }
+    }
+
+
 
 
 
@@ -68,14 +80,26 @@ void ModifClient::on_bouttonOK_clicked()
 {
     //tests si les champs sont renseignés
     if(!ui->linePrenom->text().compare("") || !ui->lineNom->text().compare("")|| !ui->lineAdresse->text().compare("")||
-            !ui->lineVille->text().compare("")|| ui->comboAffectation->size().isEmpty())
+            !ui->lineVille->text().compare("")|| ui->listWidgetAffectation->selectedItems().size()==0)
         QMessageBox::warning(this,"Erreur","Veuillez remplir tout les champs obligatoires !");
     else if(!controlerClient.testDate(ui->dateRDV->date()))
         QMessageBox::warning(this,"Erreur","Veuillez donner une date valide");
     else{
 
+        QStringList listIdSelected;
+        for(int i=0;i<listId.size();i++)
+        {
+           if((ui->listWidgetAffectation->item(i)->isSelected()))
+           {
+              listIdSelected.append(listId.value(i));
+
+              //qInfo() << listIdSelected;
+           }
+
+        }
+
         controlerClient.modifierClient(IdClient,ui->linePrenom->text(), ui->lineNom->text(), ui->lineAdresse->text(),
-                                      ui->lineVille->text(), listId.value(ui->comboAffectation->currentIndex()), ui->dateRDV->date(),
+                                      ui->lineVille->text(), listIdSelected, ui->dateRDV->date(),
                                       ui->lineTelephone->text(), ui->spinCP->value(), ui->spinDuree->value(),
                                       ui->spinPriorite->value(), ui->textCommentaire->document());
 

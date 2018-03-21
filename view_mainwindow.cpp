@@ -68,6 +68,10 @@ MainWindow::~MainWindow()
     {
         delete modelRessource;
     }
+    if(modelRecherche!=NULL)
+    {
+        delete modelRecherche;
+    }
 }
 
 void MainWindow::on_actionclient_triggered()
@@ -81,11 +85,14 @@ void MainWindow::on_actionclient_triggered()
             delete modelClient;
         }
         modelClient = new QSqlTableModel(this,DB_management::getInstance()->getDb());
+        modelRecherche = new QSqlTableModel(this,DB_management::getInstance()->getDb());
         modelClient->setTable("TClient");
         modelClient->select();
+        modelRecherche->setTable("TClient");
+        modelRecherche->select();
         ui->tableViewClient->setModel(modelClient);
         ui->tableViewClient->setEditTriggers(QAbstractItemView::NoEditTriggers);
-        ui->tableViewClient_2->setModel(modelClient);
+        ui->tableViewClient_2->setModel(modelRecherche);
         ui->tableViewClient_2->setEditTriggers(QAbstractItemView::NoEditTriggers);
         delete cw;
     }
@@ -119,7 +126,37 @@ void MainWindow::on_actionA_propos_triggered()
 
 void MainWindow::on_BouttonRechercherClient_clicked()
 {
+    if(modelRecherche!=NULL)
+    {
+        delete modelRecherche;
+    }
+    modelRecherche = new QSqlTableModel(this,DB_management::getInstance()->getDb());
+    //QSqlQueryModel query;
+    //query.setQuery("SELECT * from Tclient "
+                   //"WHERE Nom LIKE '"+ui->lineNom->text()+"%' OR Prenom LIKE '"+ui->linePrenom->text()+"%' OR DateRdv BETWEEN ‘"+ui->dateRdvDebut->date().toString(QString("yyyy-MM-dd"))+"’ AND ‘"+ui->dateRdvDebut->date().toString(QString("yyyy-MM-dd"))+" OR Id LIKE'"+ui->lineNumeroID->text()+"%'");
 
+    modelRecherche->setTable("TClient");
+
+    if(ui->dateRdvDebut->date()>ui->dateRdvFin->date())
+    {
+        QMessageBox::warning(this,"Erreur","l'intervalle des dates n'est pas valide");
+    }
+    if(ui->dateRdvDebut->date().toString(QString("yyyy-MM-dd"))=="2000-01-01" && ui->dateRdvFin->date().toString(QString("yyyy-MM-dd"))=="2000-01-01")
+    {
+        //les valeurs par défaut n'ont pas été modifié : pas de filtre sur la date
+        modelRecherche->setFilter(QString("Nom LIKE '"+ui->lineNom->text()+"%'AND Prenom LIKE '"+ui->linePrenom->text()+"%' AND Id LIKE '"+ui->lineNumeroID->text()+"%'"));
+
+    }
+    else
+    {
+        modelRecherche->setFilter(QString("Nom LIKE '"+ui->lineNom->text()+"%'AND Prenom LIKE '"+ui->linePrenom->text()+"%' AND Id LIKE '"+ui->lineNumeroID->text()+"%'AND DateRdv BETWEEN '"+ui->dateRdvDebut->date().toString(QString("yyyy-MM-dd"))+"' AND '"+ui->dateRdvFin->date().toString(QString("yyyy-MM-dd"))+"'"));
+
+    }
+
+    modelRecherche->select();
+    ui->tableViewClient->setModel(modelRecherche);
+
+    ui->tableViewClient->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 void MainWindow::on_bouttonModifierPersonnel_clicked()
@@ -154,6 +191,7 @@ void MainWindow::on_buttonSupprimerClient_clicked()
     if(!ui->tableViewClient_2->currentIndex().isValid())
     {
         QMessageBox::warning(this,"Erreur","Veuillez sélectionner une case ou une ligne");
+        return;
     }
 	
     QModelIndex currentindex = ui->tableViewClient_2->currentIndex();
@@ -183,6 +221,7 @@ void MainWindow::on_buttonModifierClient_clicked()
     if(!ui->tableViewClient_2->currentIndex().isValid())
     {
         QMessageBox::warning(this,"Erreur","Veuillez sélectionner une case ou une ligne");
+        return;
     }
 
     QModelIndex currentindex = ui->tableViewClient_2->currentIndex();

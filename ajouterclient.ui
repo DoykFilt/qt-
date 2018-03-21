@@ -169,8 +169,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="comboAffectation">
-        <property name="editable">
+       <widget class="QListWidget" name="listWidgetAffectation">
+        <property name="uniformItemSizes">
+         <bool>false</bool>
+        </property>
+        <property name="sortingEnabled">
          <bool>false</bool>
         </property>
        </widget>

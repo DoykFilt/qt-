@@ -169,11 +169,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="comboAffectation">
-        <property name="editable">
-         <bool>false</bool>
-        </property>
-       </widget>
+       <widget class="QListWidget" name="listWidgetAffectation"/>
       </item>
      </layout>
     </item>

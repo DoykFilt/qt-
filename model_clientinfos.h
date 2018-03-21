@@ -43,11 +43,11 @@ public:
     QVector<int>* getId_ressources();
     void setId_ressources(QVector<int> *value1);
     bool ajouterClient(QString qprenom, QString qnom, QString qadresse,
-                       QString qville, QString affectations, QDate date,
+                       QString qville, QStringList affectations, QDate date,
                        QString qtelephone, int CP, double duree,
                        int priorite, QString commentaire);
     bool supprimerClient(QString id);
-    bool modifierClient(QString Id, QString qprenom, QString qnom, QString qadresse, QString qville, QString affectations, QDate date, QString qtelephone, int CP, double duree, int priorite, QString commentaire);
+    bool modifierClient(QString Id, QString qprenom, QString qnom, QString qadresse, QString qville, QStringList affectations, QDate date, QString qtelephone, int CP, double duree, int priorite, QString commentaire);
 };
 
 #endif // CLIENTINFO_H

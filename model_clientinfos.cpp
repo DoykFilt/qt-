@@ -111,7 +111,7 @@ ClientInfos::ClientInfos(int ID, int dureeConsultation, int prio):
 ModelPersonne("", "", ID), dureeRdv(dureeConsultation), priorite(prio)
 {}
 bool ClientInfos::ajouterClient(QString qprenom, QString qnom, QString qadresse,
-                                QString qville, QString affectations, QDate date,
+                                QString qville, QStringList affectations, QDate date,
                                 QString qtelephone, int CP, double duree,
                                 int priorite, QString commentaire){
     QSqlQuery query(DB_management::getInstance()->getDb());
@@ -128,11 +128,16 @@ bool ClientInfos::ajouterClient(QString qprenom, QString qnom, QString qadresse,
         while(query.next())
         {
             QString ID=query.value(0).toString();
-            if(query.exec("INSERT INTO TRdv(IdClient,IdRessource)"
-                          "VALUES ('"+ID+"','"+affectations+"')"))
+            for(int i=0;i<affectations.size();i++)
             {
-                return true;
+                if(query.exec("INSERT INTO TRdv(IdClient,IdRessource)"
+                              "VALUES ('"+ID+"','"+affectations.value(i)+"')"))
+                {
+                    qInfo() << "yes";
+                }
             }
+            return true;
+
         }
      }
 
@@ -143,30 +148,29 @@ bool ClientInfos::ajouterClient(QString qprenom, QString qnom, QString qadresse,
 }
 
 bool ClientInfos::modifierClient(QString Id, QString qprenom, QString qnom, QString qadresse,
-                                QString qville, QString affectations, QDate date,
+                                QString qville, QStringList affectations, QDate date,
                                 QString qtelephone, int CP, double duree,
                                 int priorite, QString commentaire)
 {
     QSqlQuery query(DB_management::getInstance()->getDb());
-    /*if(this->supprimerClient(Id))
-    {
-        if(query.exec("INSERT INTO TClient(Id,Nom,Prenom,Adresse,Ville,CP,Commentaire,Tel,DateRdv,DureeRdv,Priorite) "
-                          "VALUES ('"+Id+"','"+qnom+"', '"+qprenom+"', '"+qadresse+"', '"+qville+"', "+QString::number(CP)+", '"+commentaire+"', '"+qtelephone+"', '"+date.toString(QString("yyyy-MM-dd"))+"', "+QString::number(duree)+", "+QString::number(priorite)+")"))
-           {
-            if(query.exec("INSERT INTO TRdv(IdClient,IdRessource)"
-                          "VALUES ('"+Id+"','"+affectations+"')"))
-            {
-                return true;
-            }
-                   return true;
-           }
-             return false;
-    }*/
 
     if(query.exec("UPDATE TClient "
-                  "SET Nom = '"+qnom+"', Prenom = '"+qprenom+"', Adresse = '"+qadresse+"', Ville = '"+qville+"', CP = "+QString::number(CP)+", Commentaire = '"+commentaire+"', Tel = '"+qtelephone+"', DateRdv = '"+date.toString(QString("yyyy-MM-dd"))+"', DureeRdv = "+QString::number(duree)+", Priorite "+QString::number(priorite)+" "
-                  "WHERE Id = "+Id+";"))
+                  "SET Nom = '"+qnom+"', Prenom = '"+qprenom+"', Adresse = '"+qadresse+"', Ville = '"+qville+"', CP = "+QString::number(CP)+", Commentaire = '"+commentaire+"', Tel = '"+qtelephone+"', DateRdv = '"+date.toString(QString("yyyy-MM-dd"))+"', DureeRdv = "+QString::number(duree)+", Priorite = "+QString::number(priorite)+" "
+                  "WHERE Id = "+Id))
     {
+        if(query.exec("DELETE FROM 'TRdv' "
+                      "WHERE IdClient = "+Id))
+        {
+            for(int i=0;i<affectations.size();i++)
+            {
+                if(query.exec("INSERT INTO TRdv(IdClient,IdRessource)"
+                              "VALUES ('"+Id+"','"+affectations.value(i)+"')"))
+                {
+                    qInfo() << "yes";
+                }
+            }
+            return true;
+        }
         return true;
     }
     return false;
@@ -183,6 +187,7 @@ bool ClientInfos::supprimerClient(QString id)
      {
          if(query.exec("DELETE FROM 'TRdv' "
                        "WHERE IdClient = "+id))
+
          return true;
      }
      return false;

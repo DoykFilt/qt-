@@ -46,6 +46,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QSqlTableModel * modelClient=NULL;
+    QSqlTableModel * modelRecherche=NULL;
     QSqlTableModel * modelRessource=NULL;
     ControlerClient cClient;
     ControlerPersonnel cPersonnel;

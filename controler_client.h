@@ -17,11 +17,11 @@ public:
     ControlerClient();
     bool testDate(QDate date);
     bool ajouterClient(QString qprenom, QString qnom, QString qadresse,
-                       QString qville, QString affectations, QDate date,
+                       QString qville, QStringList affectations, QDate date,
                        QString qtelephone, int CP, double duree,
                        int priorite, QTextDocument * commentaire);
     void modifierClient(QString ID, QString qprenom, QString qnom,
-                       QString qadresse, QString qville, QString affectations,
+                       QString qadresse, QString qville, QStringList affectations,
                        QDate date, QString qtelephone, int CP, double duree,
                        int priorite, QTextDocument * commentaire);
     bool supprimerClient(QString ID);
