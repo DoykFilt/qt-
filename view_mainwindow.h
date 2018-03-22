@@ -33,10 +33,10 @@ private slots:
     void on_actionPersonnel_triggered();
     void on_actionA_propos_triggered();
     void on_BouttonRechercherClient_clicked();
-    void on_bouttonModifierPersonnel_clicked();
     void on_buttonSupprimerClient_clicked();
     void on_buttonSupprimerPersonnel_clicked();
     void on_buttonModifierClient_clicked();
+    void on_buttonModifierPersonnel_clicked();
 
 private:
     Ui::MainWindow *ui;

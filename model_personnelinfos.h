@@ -18,6 +18,7 @@ public:
     void db_charger();
     bool db_supprimer();
     bool db_ajouter(QString nom, QString prenom,int type,QString password);
+    bool db_modifier(int ID, QString nom, QString prenom,int type,QString password);
     static QVector<personnelInfos> db_getListPersonnel(bool withoutAdmin);
 };
 

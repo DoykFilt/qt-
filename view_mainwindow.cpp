@@ -5,6 +5,7 @@
 #include "view_modifclient.h"				 
 #include "model_personnelinfos.h"
 #include "model_type.h"
+#include "view_modifpersonnel.h"
 #include <QTreeView>
 #include <QStandardItemModel>
 #include <QDebug>
@@ -39,7 +40,7 @@ void MainWindow::createTableView(){
     modelRecherche->select();
     ui->tableViewClient->setModel(modelClient);
     ui->tableViewClient->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->tableViewClient_2->setModel(modelRecherche);
+    ui->tableViewClient_2->setModel(modelClient);
     ui->tableViewClient_2->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
@@ -122,6 +123,7 @@ void MainWindow::on_actionPersonnel_triggered()
     if(ap->exec()==QDialog::Accepted)
     {
         statusBar()->showMessage(tr("Personnel ajouté"));
+        createTreeView();
         delete ap;
     }
     else
@@ -169,10 +171,6 @@ void MainWindow::on_BouttonRechercherClient_clicked()
     ui->tableViewClient->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
-void MainWindow::on_bouttonModifierPersonnel_clicked()
-{
-}
-
 void MainWindow::on_buttonSupprimerPersonnel_clicked()
 {
     QModelIndex index = ui->treeViewPersonnel->currentIndex();
@@ -208,17 +206,7 @@ void MainWindow::on_buttonSupprimerClient_clicked()
         QMessageBox::warning(this,"Erreur","Erreur de suppression");
     }
 
-    if(modelClient!=NULL)
-    {
-        delete modelClient;
-    }
-    modelClient = new QSqlTableModel(this,DB_management::getInstance()->getDb());
-    modelClient->setTable("TClient");
-    modelClient->select();
-    ui->tableViewClient->setModel(modelClient);
-    ui->tableViewClient->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->tableViewClient_2->setModel(modelClient);
-    ui->tableViewClient_2->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    createTableView();
     statusBar()->showMessage(tr("Client Supprimé"));
 }
 
@@ -237,17 +225,7 @@ void MainWindow::on_buttonModifierClient_clicked()
     if(cw->exec()==QDialog::Accepted)
     {
         statusBar()->showMessage(tr("Client Modifié"));
-        if(modelClient!=NULL)
-        {
-            delete modelClient;
-        }
-        modelClient = new QSqlTableModel(this,DB_management::getInstance()->getDb());
-        modelClient->setTable("TClient");
-        modelClient->select();
-        ui->tableViewClient->setModel(modelClient);
-        ui->tableViewClient->setEditTriggers(QAbstractItemView::NoEditTriggers);
-        ui->tableViewClient_2->setModel(modelClient);
-        ui->tableViewClient_2->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        createTableView();
         delete cw;
     }
     else
@@ -255,3 +233,30 @@ void MainWindow::on_buttonModifierClient_clicked()
 
 }
 
+
+void MainWindow::on_buttonModifierPersonnel_clicked()
+{
+    QModelIndex index = ui->treeViewPersonnel->currentIndex();
+    index.row();
+    if(!index.isValid())
+        QMessageBox::warning(this,"Erreur","Veuillez sélectionner un élément");
+    else {
+        QVariant data = ui->treeViewPersonnel->model()->data(index);
+        QString text = data.toString();
+
+        if(text.compare("1 | Admin") == 0)
+            QMessageBox::warning(this,"Erreur","Impossible de modifier l'administrateur !");
+        else{
+
+            ModifPersonnel* pw = new ModifPersonnel(this,text);
+            if(pw->exec()==QDialog::Accepted)
+            {
+                statusBar()->showMessage(tr("Personnel Modifié"));
+                createTreeView();
+                delete pw;
+            }
+            else
+                statusBar()->showMessage(tr(""));
+        }
+    }
+}

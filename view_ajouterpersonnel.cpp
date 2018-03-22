@@ -20,8 +20,6 @@ AjouterPersonnel::AjouterPersonnel(QWidget *parent) :
          }
     ui->comboBoxType->addItems(ListType);
 
-
-
     delete query;
 }
 
@@ -41,14 +39,15 @@ void AjouterPersonnel::on_buttonOK_clicked()
     {
         QMessageBox::warning(this,"Erreur","Veuillez remplir tout les champs obligatoires !");
     }
+    else{
 
-    if(ui->linePassword->isEnabled())
-    {
-        if(!(controlerPersonnel.testMdp(ui->linePassword->text())))
+        if(ui->linePassword->isEnabled())
         {
-            QMessageBox::warning(this,"Erreur","Veuillez remplir le champs mot de passe");
+            if(!(controlerPersonnel.testMdp(ui->linePassword->text())))
+            {
+                QMessageBox::warning(this,"Erreur","Veuillez remplir le champs mot de passe");
+            }
         }
-    }
 
        if(controlerPersonnel.ajouterPersonnel(ui->lineNom->text(), ui->linePrenom->text(), ui->comboBoxType->currentIndex(),ui->linePassword->text()))
        {
@@ -56,9 +55,9 @@ void AjouterPersonnel::on_buttonOK_clicked()
        }
        else
        {
-           QMessageBox::warning(this,"Erreur","L'ajout du personnel n'a pas marché !");
+           QMessageBox::warning(this,"Erreur","L'ajout du personnel a échouée !");
        }
-
+    }
 }
 
 void AjouterPersonnel::on_comboBoxType_currentIndexChanged(const QString &arg1)

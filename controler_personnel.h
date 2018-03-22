@@ -13,13 +13,10 @@ private :
 public:
     ControlerPersonnel();
     bool ajouterPersonnel(QString qnom, QString qprenom, int type, QString password);
-    void modifierPersonnel(int ID, QString qnom, QString qprenom, QString type);
+    bool modifierPersonnel(int ID, QString qnom, QString qprenom, int type, QString password);
     void supprimerPersonnel(QString ID);
 
-private:
-    //QSqlTableModel recupererPersonnel();
     bool testChamps(QString qnom, QString qprenom);
-
     bool testMdp(QString Mdp);
 };
 

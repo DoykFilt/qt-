@@ -9,6 +9,7 @@ Login::Login(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->linePassword->setEchoMode(QLineEdit::Password);
+    setWindowTitle("Se connecter");
 }
 
 Login::~Login()

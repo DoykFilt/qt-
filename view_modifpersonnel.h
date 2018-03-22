@@ -13,12 +13,13 @@ class ModifPersonnel : public QDialog
     Q_OBJECT
 
 public:
-    explicit ModifPersonnel(QWidget *parent = 0);
+    explicit ModifPersonnel(QWidget *parent = 0, QString ID="");
     ~ModifPersonnel();
 
 private slots:
     void on_buttonAnnuler_clicked();
     void on_buttonOK_clicked();
+    void on_comboBoxType_currentIndexChanged(const QString &arg1);
 
 private:
     Ui::ModifPersonnel *ui;

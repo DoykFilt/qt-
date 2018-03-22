@@ -1,4 +1,7 @@
 #include "model_rdv.h"
+#include "QSqlQuery"
+#include "db_management.h"
+#include<QVector>
 
 int ModelRdv::getID() const
 {
@@ -47,12 +50,13 @@ ModelRdv::ModelRdv(int ID1, int IDClient1, int IDRessource1)
 
 QVector<int> ModelRdv::getListRessources(int idClient){
     QSqlQuery * query=new QSqlQuery(DB_management::getInstance()->getDb());
+    QVector<int> v;
     if(query->exec("SELECT IdRessource FROM 'TRdv' WHERE IdClient = " + idClient))
     {
         while(query->next())
         {
-            QString value=query->value(0).toString();
-            ui->listWidgetAffectation->item(listId.indexOf(value))->setSelected(true);
+            v.append(query->value(0).toInt());
         }
     }
+    return v;
 }

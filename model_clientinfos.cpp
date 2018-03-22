@@ -174,9 +174,9 @@ bool ClientInfos::modifierClient(QString Id, QString qprenom, QString qnom, QStr
 bool ClientInfos::supprimerClient(QString id)
 {
      QSqlQuery query(DB_management::getInstance()->getDb());
-     if(query.exec("DELETE FROM 'TClient' WHERE Id = "+getID()))
+     if(query.exec("DELETE FROM 'TClient' WHERE Id = "+id))
      {
-         if(query.exec("DELETE FROM 'TRdv' WHERE IdClient = "+getID()))
+         if(query.exec("DELETE FROM 'TRdv' WHERE IdClient = "+id))
             return true;
      }
      return false;
@@ -184,17 +184,17 @@ bool ClientInfos::supprimerClient(QString id)
 
 void ClientInfos::chargerClient(){
     QSqlQuery query(DB_management::getInstance()->getDb());
-    query->exec("SELECT * FROM 'TClient' WHERE Id = "+getID());
+    query.exec("SELECT * FROM 'TClient' WHERE Id = "+getID());
     while(query.next()){
-        nom = query.value(1).toString();
-        prenom = query.value(2).toString();
+        setNom(query.value(1).toString());
+        setPrenom(query.value(2).toString());
         adresse = query.value(3).toString();
         ville = query.value(4).toString();
-        codePostal = query.value(5).toInt(;
+        codePostal = query.value(5).toInt();
         tel = query.value(7).toString();
         dateRdv = query.value(8).toDate();
-        dureeRdv = query.value(9).toInt(;
-        priorite = query.value(10).toInt(;
+        dureeRdv = query.value(9).toInt();
+        priorite = query.value(10).toInt();
     }
 }
 

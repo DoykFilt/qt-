@@ -11,6 +11,7 @@ private:
     QString label;
 
 public:
+    Type();
     Type(int ID, QString LABEL);
 
     std::vector<personnelInfos> getRessourcesRelatifs();
@@ -19,6 +20,7 @@ public:
     int getId() const;
     void setId(int value);
     static std::vector<Type> getListType();
+    static Type getTypeOf(int idRessource);
 };
 
 #endif // MODEL_TYPE_H

@@ -68,43 +68,8 @@
            <bool>false</bool>
           </property>
           <property name="currentText">
-           <string>Banquier type A</string>
+           <string/>
           </property>
-          <item>
-           <property name="text">
-            <string>Banquier type A</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Banquier type B</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Assureur logement</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Assureur voiture</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Assureur vie</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Informaticien</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Divers</string>
-           </property>
-          </item>
          </widget>
         </item>
        </layout>

@@ -70,16 +70,16 @@ void personnelInfos::db_charger(){
     }
 }
 
-/*bool personnelInfos::db_modifier(){
+bool personnelInfos::db_modifier(int ID, QString nom, QString prenom,int type, QString password){
 
     DB_management * db = DB_management::getInstance();
 
     QSqlQuery query(db->getDb());
-    query.prepare("UPDATE TRessources Nom = ?, Prenom = ?, IdType = ? WHERE Id = ?");
-    query.addBindValue(0, getNom());
-    query.addBindValue(1, getPrenom());
-    query.addBindValue(2, getType());
-    query.addBindValue(3, getID());
+    query.prepare("UPDATE TRessources Nom = :nom, Prenom = :prenom, IdType = :type WHERE Id = :id");
+    query.bindValue(":nom", nom);
+    query.bindValue(":prenom", prenom);
+    query.bindValue(":type", type);
+    query.bindValue(":id", ID);
 
     bool result = query.exec();
     if(!result)
@@ -87,7 +87,28 @@ void personnelInfos::db_charger(){
         qDebug() << query.lastError().text();
         qDebug() << "La requête db_modifier a échouée !\n";
     }
-}*/
+
+    if(!password.isEmpty())
+    {
+        query.prepare("DELETE TCompte WHERE IdRessource = :id");
+        query.bindValue(":id", ID);
+        query.exec();
+
+        if(query.exec("SELECT Id FROM TRessource "
+                       "WHERE Nom = '"+nom+"' AND Prenom = '"+prenom+"'"))
+        {
+            while (query.next())
+            {
+                QString ID=query.value(0).toString();
+                if(query.exec("INSERT INTO TCompte(IdRessource,Login,MdP) "
+                              "VALUES ('"+ID+"','"+ID+"' , '"+password+"')"))
+                {
+                    qDebug() << "Valeur insérée";
+                }
+            }
+        }
+    }
+}
 
 bool personnelInfos::db_ajouter(QString nom, QString prenom, int type, QString password){
     QSqlQuery query(DB_management::getInstance()->getDb());
@@ -110,7 +131,7 @@ bool personnelInfos::db_ajouter(QString nom, QString prenom, int type, QString p
                 if(query.exec("INSERT INTO TCompte(IdRessource,Login,MdP) "
                               "VALUES ('"+ID+"','"+ID+"' , '"+password+"')"))
                 {
-                    qInfo() << "yes";
+                    qDebug() << "Valeur insérée";
                 }
             }
         }
@@ -137,11 +158,12 @@ QVector<personnelInfos> personnelInfos::db_getListPersonnel(bool withoutAdmin){
         while(query->next())
         {
             personnelInfos personnel;
-            personnel.setNom(query->value(0));
-            personnel.setPrenom(query->value(1));
-            personnel.setID(query->value(2));
+            personnel.setNom(query->value(0).toString());
+            personnel.setPrenom(query->value(1).toString());
+            personnel.setID(query->value(2).toInt());
             personnels.append(personnel);
         }
+    }
     delete query;
     return personnels;
 }

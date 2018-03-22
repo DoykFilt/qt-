@@ -8,6 +8,9 @@
 #include <QMessageBox>
 #include <QDebug>
 
+
+/*Dans ce constructeur nous avons obtenu des erreurs en voulant le normé MVC donc il n respecte pas cette norme
+Cependant, le code contenu dans les commentaires a été écrit dans cet objectif*/
 ModifClient::ModifClient(QWidget *parent, QString id) :
     QDialog(parent),
     ui(new Ui::ModifClient)
@@ -17,7 +20,7 @@ ModifClient::ModifClient(QWidget *parent, QString id) :
     qDebug() << id;
     IdClient=id;
 
-    /*QSqlQuery * query=new QSqlQuery(DB_management::getInstance()->getDb());
+    QSqlQuery * query=new QSqlQuery(DB_management::getInstance()->getDb());
 
     if (query->exec("SELECT Nom, Prenom, Id FROM 'TRessource'"
                          "WHERE Nom != 'Admin'"))
@@ -29,18 +32,19 @@ ModifClient::ModifClient(QWidget *parent, QString id) :
 
              }
 
-         }*/
+         }
+    /*
     QVector<personnelInfos> personnels =  personnelInfos::db_getListPersonnel(true);
     for(QVector<personnelInfos>::iterator it = personnels.begin(); it != personnels.end(); it++)
     {
         listRessources.append(it->getNom() + " " + it->getPrenom());
         listId.append(QString::number(it->getID()));
     }
-
+*/
     ui->listWidgetAffectation->addItems(listRessources);
     ui->listWidgetAffectation->setSelectionMode(QAbstractItemView::MultiSelection);
 
-/*
+
     if(query->exec("SELECT IdRessource FROM 'TRdv'"
                    "WHERE IdClient = "+IdClient))
     {
@@ -49,15 +53,16 @@ ModifClient::ModifClient(QWidget *parent, QString id) :
             QString value=query->value(0).toString();
             ui->listWidgetAffectation->item(listId.indexOf(value))->setSelected(true);
         }
-    }*/
+    }
+    /*
     QVector<int> ids = ModelRdv::getListRessources(IdClient.toInt());
     for(QVector<int>::iterator it = ids.begin(); it != ids.end(); it++){
         QString value=QString::number(*it);
         ui->listWidgetAffectation->item(listId.indexOf(value))->setSelected(true);
     }
+*/
 
-
-    /* if (query->exec("SELECT * FROM 'TClient' WHERE Id = "+IdClient))
+     if (query->exec("SELECT * FROM 'TClient' WHERE Id = "+IdClient))
      {
          while(query->next())
          {
@@ -72,7 +77,8 @@ ModifClient::ModifClient(QWidget *parent, QString id) :
              ui->spinDuree->setValue(query->value(9).toInt());
              ui->spinPriorite->setValue(query->value(10).toInt());
          }
-     }*/
+     }
+     /*
     ClientInfos client;
     client.setID(IdClient.toInt());
     client.chargerClient();
@@ -85,7 +91,7 @@ ModifClient::ModifClient(QWidget *parent, QString id) :
     ui->lineTelephone->setText(client.getTel());
     ui->dateRDV->setDate(client.getDateRdv());
     ui->spinDuree->setValue(client.getDureeRdv());
-    ui->spinPriorite->setValue(client.getPriorite());
+    ui->spinPriorite->setValue(client.getPriorite());*/
 }
 
 ModifClient::~ModifClient()

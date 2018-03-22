@@ -7,11 +7,11 @@ ControllerLogin::ControllerLogin()
 
 bool ControllerLogin::isLoginCorrect(QString login,QString password)
 {
-    /*if(mc.isLoginCorrect(login,password))
+    if(mc.isLoginCorrect(login,password))
     {
         return true;
     }
-    return false;*/
+    return false;
     return true;
 }
 

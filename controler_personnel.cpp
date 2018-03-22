@@ -34,7 +34,7 @@ void ControlerPersonnel::supprimerPersonnel(QString id){
     personnelInfos personnel;
     //On récupère l'identifiant à partir de la chaîne du type "id | nom"
     QStringList elems = id.split('|');
-    personnel.setID(elems[0].toInt());=
+    personnel.setID(elems[0].toInt());
 
     //On charge la ressource à partir de son id puis on le supprime
     personnel.db_charger();
@@ -42,5 +42,7 @@ void ControlerPersonnel::supprimerPersonnel(QString id){
         qDebug() << "Personnel non supprimé";
 }
 
-void ControlerPersonnel::modifierPersonnel(int ID, QString qnom, QString qprenom, QString type){
+bool ControlerPersonnel::modifierPersonnel(int ID, QString qnom, QString qprenom, int type, QString password){
+
+    return pi.db_modifier(ID, qnom,qprenom,type,password);
 }

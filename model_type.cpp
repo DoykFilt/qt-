@@ -30,6 +30,9 @@ Type::Type(int ID, QString LABEL)
     id = ID;
     label = LABEL;
 }
+Type::Type()
+{
+}
 
 //Renvoit la liste de tout les types existants dans la BDD
 std::vector<Type> Type::getListType(){
@@ -89,4 +92,27 @@ std::vector<personnelInfos> Type::getRessourcesRelatifs(){
     }
 
     return list;
+}
+
+Type Type::getTypeOf(int idRessource){
+    DB_management * db = DB_management::getInstance();
+    Type type;
+    QSqlQuery query(db->getDb());
+    query.prepare("SELECT * FROM TType WHERE IdType IN (SELECT IdType FROM TRessource WHERE IdRessource = :id)");
+    query.bindValue("id", QString::number(idRessource));
+
+    bool result = query.exec();
+    if(!result)
+    {
+        qDebug() << query.lastError().text();
+        qDebug() << "La requête getTypeOf a échouée !\n";
+        return type;
+    }
+
+    while(query.next()){
+        type.setId(query.value(0).toInt());
+        type.setLabel(query.value(1).toString());
+        return type;
+    }
+
 }
