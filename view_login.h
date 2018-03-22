@@ -6,6 +6,7 @@
 #include "view_mainwindow.h"
 #include "string.h"
 #include "controller_login.h"
+using Qt::WindowTitleHint;
 using namespace std;
 
 namespace Ui {

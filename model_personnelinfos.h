@@ -7,8 +7,6 @@ class personnelInfos : public ModelPersonne
 {
 private :
     int type;
-    bool db_modifier();
-    bool db_ajouter();
 
 public:
     personnelInfos();
@@ -18,7 +16,7 @@ public:
 
     void db_charger();
     bool db_supprimer();
-    bool db_ajouterOUmodifier();
+    bool db_ajouter(QString nom, QString prenom,int type,QString password);
 };
 
 #endif // PERSONNELINFOS_H

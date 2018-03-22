@@ -8,6 +8,21 @@ AjouterPersonnel::AjouterPersonnel(QWidget *parent) :
     ui(new Ui::AjouterPersonnel)
 {
     ui->setupUi(this);
+    QSqlQuery * query=new QSqlQuery(DB_management::getInstance()->getDb());
+    if (query->exec("SELECT Label FROM 'TType'"))
+         {
+             while(query->next())
+             {
+
+                ListType.append(query->value(0).toString());
+             }
+
+         }
+    ui->comboBoxType->addItems(ListType);
+
+
+
+    delete query;
 }
 
 AjouterPersonnel::~AjouterPersonnel()
@@ -22,13 +37,38 @@ void AjouterPersonnel::on_buttonAnnuler_clicked()
 
 void AjouterPersonnel::on_buttonOK_clicked()
 {
-    Login login;
-    //tests si les champs sont renseignés
-    if(!ui->lineNom->text().compare("") || !ui->linePrenom->text().compare("") || ui->comboBoxType->currentIndex() == -1)
-        QMessageBox::warning(this,"Erreur","Veuillez remplir tout les champs !");
-    else if((!ui->comboBoxType->currentText().compare("Informaticien") && login.exec() == QDialog::Accepted)
-            || ui->comboBoxType->currentText().compare("Informaticien")){
-        controlerPersonnel.ajouterPersonnel(ui->lineNom->text(), ui->linePrenom->text(), ui->comboBoxType->currentText());
-        this->accept();
+    if(!(controlerPersonnel.testChamps(ui->lineNom->text(), ui->linePrenom->text())))
+    {
+        QMessageBox::warning(this,"Erreur","Veuillez remplir tout les champs obligatoires !");
+    }
+
+    if(ui->linePassword->isEnabled())
+    {
+        if(!(controlerPersonnel.testMdp(ui->linePassword->text())))
+        {
+            QMessageBox::warning(this,"Erreur","Veuillez remplir le champs mot de passe");
+        }
+    }
+
+       if(controlerPersonnel.ajouterPersonnel(ui->lineNom->text(), ui->linePrenom->text(), ui->comboBoxType->currentIndex(),ui->linePassword->text()))
+       {
+           this->accept();
+       }
+       else
+       {
+           QMessageBox::warning(this,"Erreur","L'ajout du personnel n'a pas marché !");
+       }
+
+}
+
+void AjouterPersonnel::on_comboBoxType_currentIndexChanged(const QString &arg1)
+{
+    if(arg1=="Informaticien")
+    {
+        ui->linePassword->setEnabled(true);
+    }
+    else
+    {
+        ui->linePassword->setEnabled(false);
     }
 }

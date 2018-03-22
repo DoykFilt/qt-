@@ -1,16 +1,35 @@
 #include "controler_personnel.h"
 #include "model_personnelinfos.h"
 #include "QDebug"
+#include <QMessageBox>
 
 
 ControlerPersonnel::ControlerPersonnel()
 {
 
 }
+bool ControlerPersonnel::testChamps(QString qnom, QString qprenom)
+{
+    if(qnom=="" || qprenom=="")
+    {
+        return false;
+    }
+    return true;
+}
 
-void ControlerPersonnel::ajouterPersonnel(QString qnom, QString qprenom, QString type){
-    std::string nom = computeString(qnom);
-    std::string prenom = computeString(qprenom);
+bool ControlerPersonnel::testMdp(QString Mdp)
+{
+    if(Mdp=="")
+    {
+        return false;
+    }
+    return true;
+}
+bool ControlerPersonnel::ajouterPersonnel(QString qnom, QString qprenom, int type, QString password){
+
+
+     return pi.db_ajouter(qnom,qprenom,type,password);
+
 }
 
 void ControlerPersonnel::supprimerPersonnel(int id){

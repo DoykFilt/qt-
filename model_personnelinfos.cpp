@@ -68,36 +68,16 @@ void personnelInfos::db_charger(){
     }
 }
 
-bool personnelInfos::db_ajouterOUmodifier(){
-    DB_management * db = DB_management::getInstance();
-    std::vector<personnelInfos> list;
-
-    QSqlQuery query(db->getDb());
-    query.prepare("SELECT * FROM TRessource WHERE Id = ?");
-    query.addBindValue(getID());
-
-    bool result = query.exec();
-    if(!result || query.size() == -1)
-    {
-        qDebug() << query.lastError().text();
-        qDebug() << "La requête db_ajouterOUmodifier a échouée !\n";
-    }
-    if(query.size() < 1)
-        db_ajouter();
-    else
-        db_modifier();
-}
-
-bool personnelInfos::db_modifier(){
+/*bool personnelInfos::db_modifier(){
 
     DB_management * db = DB_management::getInstance();
 
     QSqlQuery query(db->getDb());
     query.prepare("UPDATE TRessources Nom = ?, Prenom = ?, IdType = ? WHERE Id = ?");
-    /*query.addBindValue(0, getNom());
+    query.addBindValue(0, getNom());
     query.addBindValue(1, getPrenom());
     query.addBindValue(2, getType());
-    query.addBindValue(3, getID());*/
+    query.addBindValue(3, getID());
 
     bool result = query.exec();
     if(!result)
@@ -105,21 +85,36 @@ bool personnelInfos::db_modifier(){
         qDebug() << query.lastError().text();
         qDebug() << "La requête db_modifier a échouée !\n";
     }
-}
+}*/
 
-bool personnelInfos::db_ajouter(){
-    DB_management * db = DB_management::getInstance();
+bool personnelInfos::db_ajouter(QString nom, QString prenom, int type, QString password){
+    QSqlQuery query(DB_management::getInstance()->getDb());
+    QSqlQuery query2(DB_management::getInstance()->getDb());
+    bool result=(query.exec("INSERT INTO TRessource(Nom, Prenom, IdType) "
+                  "VALUES ('"+nom+"', '"+prenom+"', "+QString::number(type)+")"));
 
-    QSqlQuery query(db->getDb());
-    query.prepare("INSERT INTO TRessources (Nom, Prenom, IdType) VALUES (?, ?, ?");
-    /*query.addBindValue(0, getNom());
-    query.addBindValue(1, getPrenom());
-    query.addBindValue(2, getType());*/
-
-    bool result = query.exec();
     if(!result)
     {
-        qDebug() << query.lastError().text();
-        qDebug() << "La requête db_ajouter a échouée !\n";
+        return false;
     }
+    if(!password.isEmpty())
+    {
+        if(query2.exec("SELECT Id FROM TRessource "
+                       "WHERE Nom = '"+nom+"' AND Prenom = '"+prenom+"'"))
+        {
+            while (query2.next())
+            {
+                QString ID=query.value(0).toString();
+                if(query.exec("INSERT INTO TCompte(IdRessource,Login,MdP) "
+                              "VALUES ('"+ID+"','"+ID+"' , '"+password+"')"))
+                {
+                    qInfo() << "yes";
+                }
+            }
+        }
+
+
+
+    }
+    return true;
 }

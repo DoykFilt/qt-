@@ -36,7 +36,7 @@ bool DB_init::Creation_BD()
         }
 
         b_test=query.exec("create table TCompte "
-                          "(Id integer primary key, "
+                          "(Id integer primary key AUTO_INCREMENT, "
                           "IdRessource integer, "
                           "Login varchar(50), "
                           "MdP varchar(50))");
@@ -48,7 +48,7 @@ bool DB_init::Creation_BD()
         }
 
         b_test=query.exec("create table TRdv "
-                          "(Id integer primary key, "
+                          "(Id integer primary key AUTO_INCREMENT, "
                           "IdClient integer, "
                           "IdRessource integer)");
         if(!b_test)

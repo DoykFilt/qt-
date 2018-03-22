@@ -21,9 +21,12 @@ private slots:
 
     void on_buttonOK_clicked();
 
+    void on_comboBoxType_currentIndexChanged(const QString &arg1);
+
 private:
     Ui::AjouterPersonnel *ui;
     ControlerPersonnel controlerPersonnel;
+    QStringList ListType;
 };
 
 #endif // VIEW_AJOUTERPERSONNEL_H
