@@ -32,7 +32,7 @@ void Login::on_connecterButton_clicked()
     }
     else
     {
-        QMessageBox::warning(this,"Erreur","Login ou mot de passe incorrect");
+        QMessageBox::warning(this,"Erreur","Login ou mot de passe incorrect !");
         ui->linePassword->clear();
     }
 

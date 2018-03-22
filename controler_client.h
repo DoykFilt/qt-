@@ -8,7 +8,6 @@
 #include "controler_personne.h"
 #include "model_clientinfos.h"
 
-
 class ControlerClient : public controller_personne
 {
 private:

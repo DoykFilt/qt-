@@ -10,7 +10,7 @@ using Qt::WindowTitleHint;
 using namespace std;
 
 namespace Ui {
-class Login;
+    class Login;
 }
 
 class Login : public QDialog
@@ -24,7 +24,6 @@ private:
 
 private slots:
     void on_annulerButton_clicked();
-
     void on_connecterButton_clicked();
 
 private:

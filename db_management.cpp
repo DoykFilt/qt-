@@ -30,11 +30,6 @@ void DB_management::kill(){
         delete instance;
         instance = NULL;
     }
-    /*if(model != NULL)
-    {
-        delete model;
-        model=NULL;
-    }*/
 }
 
 bool DB_management::open(){

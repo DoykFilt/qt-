@@ -5,6 +5,7 @@ controller_personne::controller_personne()
 
 }
 
+//Permet de formatter une chaîne de caractère : Majuscule au début, le reste en minuscule
 QString controller_personne::computeString(QString qstring){
     //On met une majuscule au premier caractère du nom et du prenom, le reste en minuscule
     std::string string = qstring.toStdString();

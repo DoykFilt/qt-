@@ -21,7 +21,6 @@ public:
     bool open();
     void close();
     QSqlError lastError();
-
     QSqlDatabase getDb() const;
     void setDb(const QSqlDatabase &value);
 };

@@ -116,32 +116,29 @@ bool ClientInfos::ajouterClient(QString qprenom, QString qnom, QString qadresse,
                                 int priorite, QString commentaire){
     QSqlQuery query(DB_management::getInstance()->getDb());
 
-
+    //Creation du client
     if (query.exec("INSERT INTO TClient(Nom,Prenom,Adresse,Ville,CP,Commentaire,Tel,DateRdv,DureeRdv,Priorite) "
                    "VALUES ('"+qnom+"', '"+qprenom+"', '"+qadresse+"', '"+qville+"', "+QString::number(CP)+", '"+commentaire+"', '"+qtelephone+"', '"+date.toString(QString("yyyy-MM-dd"))+"', "+QString::number(duree)+", "+QString::number(priorite)+")"))
     {
         QSqlQuery query2(DB_management::getInstance()->getDb());
 
-    if(query.exec("SELECT Id FROM TClient "
-                   "WHERE Nom = '"+qnom+"' AND Prenom = '"+qprenom+"'"))
-    {
-        while(query.next())
+        //Création des rdv associés
+        if(query.exec("SELECT Id FROM TClient WHERE Nom = '"+qnom+"' AND Prenom = '"+qprenom+"'"))
         {
-            QString ID=query.value(0).toString();
-            for(int i=0;i<affectations.size();i++)
+            while(query.next())
             {
-                if(query.exec("INSERT INTO TRdv(IdClient,IdRessource)"
-                              "VALUES ('"+ID+"','"+affectations.value(i)+"')"))
+                QString ID=query.value(0).toString();
+                for(int i=0;i<affectations.size();i++)
                 {
-                    qInfo() << "yes";
+                    if(query.exec("INSERT INTO TRdv(IdClient,IdRessource)"
+                                  "VALUES ('"+ID+"','"+affectations.value(i)+"')"))
+                    {
+                        //qInfo() << "yes";
+                    }
                 }
+                return true;
             }
-            return true;
-
         }
-     }
-
-
     }
       return false;
 
@@ -154,21 +151,18 @@ bool ClientInfos::modifierClient(QString Id, QString qprenom, QString qnom, QStr
 {
     QSqlQuery query(DB_management::getInstance()->getDb());
 
-    if(query.exec("UPDATE TClient "
-                  "SET Nom = '"+qnom+"', Prenom = '"+qprenom+"', Adresse = '"+qadresse+"', Ville = '"+qville+"', CP = "+QString::number(CP)+", Commentaire = '"+commentaire+"', Tel = '"+qtelephone+"', DateRdv = '"+date.toString(QString("yyyy-MM-dd"))+"', DureeRdv = "+QString::number(duree)+", Priorite = "+QString::number(priorite)+" "
+    //Change les valeurs du client dans la bdd
+    if(query.exec("UPDATE TClient SET Nom = '"+qnom+"', Prenom = '"+qprenom+"', Adresse = '"+qadresse+"', "
+                  "Ville = '"+qville+"', CP = "+QString::number(CP)+", Commentaire = '"+commentaire+"', "
+                  "Tel = '"+qtelephone+"', DateRdv = '"+date.toString(QString("yyyy-MM-dd"))+"', "
+                  "DureeRdv = "+QString::number(duree)+", Priorite = "+QString::number(priorite)+" "
                   "WHERE Id = "+Id))
     {
-        if(query.exec("DELETE FROM 'TRdv' "
-                      "WHERE IdClient = "+Id))
+        //Supprime les anciens rdv et les remplace par les nouveaux
+        if(query.exec("DELETE FROM 'TRdv' WHERE IdClient = "+Id))
         {
             for(int i=0;i<affectations.size();i++)
-            {
-                if(query.exec("INSERT INTO TRdv(IdClient,IdRessource)"
-                              "VALUES ('"+Id+"','"+affectations.value(i)+"')"))
-                {
-                    qInfo() << "yes";
-                }
-            }
+                query.exec("INSERT INTO TRdv(IdClient,IdRessource) VALUES ('"+Id+"','"+affectations.value(i)+"')");
             return true;
         }
         return true;
@@ -179,17 +173,28 @@ bool ClientInfos::modifierClient(QString Id, QString qprenom, QString qnom, QStr
 
 bool ClientInfos::supprimerClient(QString id)
 {
-
-
      QSqlQuery query(DB_management::getInstance()->getDb());
-     if(query.exec("DELETE FROM 'TClient'"
-                   "WHERE Id = "+id))
+     if(query.exec("DELETE FROM 'TClient' WHERE Id = "+getID()))
      {
-         if(query.exec("DELETE FROM 'TRdv' "
-                       "WHERE IdClient = "+id))
-
-         return true;
+         if(query.exec("DELETE FROM 'TRdv' WHERE IdClient = "+getID()))
+            return true;
      }
      return false;
+}
+
+void ClientInfos::chargerClient(){
+    QSqlQuery query(DB_management::getInstance()->getDb());
+    query->exec("SELECT * FROM 'TClient' WHERE Id = "+getID());
+    while(query.next()){
+        nom = query.value(1).toString();
+        prenom = query.value(2).toString();
+        adresse = query.value(3).toString();
+        ville = query.value(4).toString();
+        codePostal = query.value(5).toInt(;
+        tel = query.value(7).toString();
+        dateRdv = query.value(8).toDate();
+        dureeRdv = query.value(9).toInt(;
+        priorite = query.value(10).toInt(;
+    }
 }
 

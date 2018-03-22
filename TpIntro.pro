@@ -45,8 +45,7 @@ SOURCES += \
     model_type.cpp \
     model_compte.cpp \
     db_management.cpp \
-    controller_login.cpp \
-    qlignearbre.cpp
+    controller_login.cpp
 
 HEADERS += \
     view_ajouterclient.h \
@@ -68,8 +67,7 @@ HEADERS += \
     model_type.h \
     model_compte.h \
     db_management.h \
-    controller_login.h \
-    qlignearbre.h
+    controller_login.h
 
 FORMS += \
         mainwindow.ui \

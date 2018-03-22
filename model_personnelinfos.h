@@ -1,6 +1,7 @@
 #ifndef PERSONNELINFOS_H
 #define PERSONNELINFOS_H
 #include "model_personne.h"
+#include <QVector>
 
 
 class personnelInfos : public ModelPersonne
@@ -17,6 +18,7 @@ public:
     void db_charger();
     bool db_supprimer();
     bool db_ajouter(QString nom, QString prenom,int type,QString password);
+    static QVector<personnelInfos> db_getListPersonnel(bool withoutAdmin);
 };
 
 #endif // PERSONNELINFOS_H

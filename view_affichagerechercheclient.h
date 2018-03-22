@@ -4,7 +4,7 @@
 #include <QDialog>
 
 namespace Ui {
-class affichageRechercheClient;
+    class affichageRechercheClient;
 }
 
 class affichageRechercheClient : public QDialog
@@ -17,7 +17,7 @@ public:
 
 private slots:
     void on_buttonOK_clicked();
-
+    
 private:
     Ui::affichageRechercheClient *ui;
 };

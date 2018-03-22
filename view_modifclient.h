@@ -5,7 +5,7 @@
 #include "controler_client.h"
 
 namespace Ui {
-class ModifClient;
+    class ModifClient;
 }
 
 class ModifClient : public QDialog
@@ -17,9 +17,7 @@ public:
     ~ModifClient();
 
 private slots:
-
     void on_bouttonOK_clicked();
-
     void on_bouttonAnnuler_clicked();
 
 private:

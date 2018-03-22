@@ -31,6 +31,7 @@ Type::Type(int ID, QString LABEL)
     label = LABEL;
 }
 
+//Renvoit la liste de tout les types existants dans la BDD
 std::vector<Type> Type::getListType(){
     DB_management * db = DB_management::getInstance();
     std::vector<Type> list;
@@ -56,6 +57,7 @@ std::vector<Type> Type::getListType(){
     return list;
 }
 
+//Renvoit la liste des Ressources appartenant au type de l'objet Type
 std::vector<personnelInfos> Type::getRessourcesRelatifs(){
     DB_management * db = DB_management::getInstance();
     std::vector<personnelInfos> list;

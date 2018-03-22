@@ -19,12 +19,12 @@ private :
     QString tel;
     QVector<int> id_ressources;
 
-
 public:
     ClientInfos();
-    ClientInfos(int ID, QString n, QString p, QString a, QString v,int CP,QDate drdv, int dureeConsultation, int prio,QString t, QVector<int> * ids);
+    ClientInfos(int ID, QString n, QString p, QString a, QString v,
+                int CP,QDate drdv, int dureeConsultation, int prio,
+                QString t, QVector<int> * ids);
     ClientInfos(int ID, int dureeConsultation, int prio);
-
 
     QString getAdresse() const;
     void setAdresse(const QString &value);
@@ -47,7 +47,11 @@ public:
                        QString qtelephone, int CP, double duree,
                        int priorite, QString commentaire);
     bool supprimerClient(QString id);
-    bool modifierClient(QString Id, QString qprenom, QString qnom, QString qadresse, QString qville, QStringList affectations, QDate date, QString qtelephone, int CP, double duree, int priorite, QString commentaire);
+    bool modifierClient(QString Id, QString qprenom, QString qnom,
+                        QString qadresse, QString qville, QStringList affectations,
+                        QDate date, QString qtelephone, int CP, double duree,
+                        int priorite, QString commentaire);
+    void chargerClient();
 };
 
 #endif // CLIENTINFO_H

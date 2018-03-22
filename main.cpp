@@ -14,9 +14,6 @@ int main(int argc, char *argv[])
     db->open();
     if(w1.exec()==QDialog::Accepted)
     {
-        /*DB_init::Creation_BD();
-        DB_management * db = DB_management::getInstance();
-        db->open();*/
         w2.show();
         return a.exec();
         db->close();
@@ -24,6 +21,5 @@ int main(int argc, char *argv[])
     }
     db->close();
     DB_management::kill();
-    //
     return 0;
 }

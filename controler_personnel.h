@@ -3,8 +3,6 @@
 #include "controler_personne.h"
 #include "model_personnelinfos.h"
 
-
-
 #include <QString>
 
 class ControlerPersonnel : public controller_personne
@@ -16,7 +14,9 @@ public:
     ControlerPersonnel();
     bool ajouterPersonnel(QString qnom, QString qprenom, int type, QString password);
     void modifierPersonnel(int ID, QString qnom, QString qprenom, QString type);
-    void supprimerPersonnel(int ID);
+    void supprimerPersonnel(QString ID);
+
+private:
     //QSqlTableModel recupererPersonnel();
     bool testChamps(QString qnom, QString qprenom);
 

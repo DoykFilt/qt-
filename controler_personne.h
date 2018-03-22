@@ -4,7 +4,6 @@
 #include "string"
 #include "db_management.h"
 
-
 class controller_personne
 {
 public:

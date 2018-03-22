@@ -60,10 +60,10 @@ ModelCompte::ModelCompte(int Id1, int IdRessource1, QString Login1, QString Mdp1
 
 bool ModelCompte::isLoginCorrect(QString login,QString password)
 {
-    QSqlQuery * query=new QSqlQuery(DB_management::getInstance()->getDb());
+    QSqlQuery * query = new QSqlQuery(DB_management::getInstance()->getDb());
 
     if (query->exec("SELECT Id FROM TCompte WHERE Login = '"+login+"' and Mdp = '"+password+"'"))
-        {
+    {
          while (query->next())
          {
              if(query->value(0).toString().compare(login) && query->value(1).toString().compare(password))
@@ -73,7 +73,7 @@ bool ModelCompte::isLoginCorrect(QString login,QString password)
              }
          }
 
-        }
+    }
     delete query;
     return false;
 }

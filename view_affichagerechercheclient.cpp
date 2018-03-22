@@ -5,8 +5,6 @@ affichageRechercheClient::affichageRechercheClient(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::affichageRechercheClient)
 {
-    //ui->tableView->setmodel()
-    
     ui->setupUi(this);
 }
 

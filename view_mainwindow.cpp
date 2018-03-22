@@ -5,11 +5,11 @@
 #include "view_modifclient.h"				 
 #include "model_personnelinfos.h"
 #include "model_type.h"
-#include "qlignearbre.h"
 #include <QTreeView>
 #include <QStandardItemModel>
 #include <QDebug>
 #include <QMessageBox>
+#include <sstream>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -17,21 +17,45 @@ MainWindow::MainWindow(QWidget *parent) :
 
 {
     ui->setupUi(this);
-
     //Affichage des clients
-    modelClient = new QSqlTableModel(this,DB_management::getInstance()->getDb());
-    modelClient->setTable("TClient");
-    modelClient->select();
-    ui->tableViewClient->setModel(modelClient);
-    ui->tableViewClient->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->tableViewClient_2->setModel(modelClient);
-    ui->tableViewClient_2->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    createTableView();
 
     //Affichage du personnel
+    createTreeView();
 
+    statusBar()->showMessage(tr("Connecté"));
+}
+
+void MainWindow::createTableView(){
+    if(modelClient!=NULL)
+    {
+        delete modelClient;
+    }
+    modelClient = new QSqlTableModel(this,DB_management::getInstance()->getDb());
+    modelRecherche = new QSqlTableModel(this,DB_management::getInstance()->getDb());
+    modelClient->setTable("TClient");
+    modelClient->select();
+    modelRecherche->setTable("TClient");
+    modelRecherche->select();
+    ui->tableViewClient->setModel(modelClient);
+    ui->tableViewClient->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tableViewClient_2->setModel(modelRecherche);
+    ui->tableViewClient_2->setEditTriggers(QAbstractItemView::NoEditTriggers);
+}
+
+void MainWindow::createTreeView(){
+
+    //Si l'arbre existe déjà on le delete. Ses enfants sont désalloué automatiquement
+    if(ui->treeViewPersonnel->model() != NULL)
+    {
+        delete ui->treeViewPersonnel->model();
+    }
+
+    //Ensuite on créer l'arbre
     QStandardItemModel * standardModel = new QStandardItemModel(this);
     QStandardItem * rootNode = standardModel->invisibleRootItem();
 
+    //On insère les noeuds des types
     std::vector<Type> types = Type::getListType();
     for(std::vector<Type>::iterator itT = types.begin(); itT != types.end(); itT++)
     {
@@ -39,22 +63,22 @@ MainWindow::MainWindow(QWidget *parent) :
         rootNode->appendRow(typeItem);
         typeItem->setEditable(false);
         typeItem->setSelectable(false);
+
+        //On insère sous le type les ressources associés
         std::vector<personnelInfos> ressources = itT->getRessourcesRelatifs();
         for(std::vector<personnelInfos>::iterator itP = ressources.begin(); itP != ressources.end(); itP++)
         {
-            /*
-            QStandardItem * ressourceItem = new QStandardItem(itP->getNom());
-            ressourceItem->setEditable(false);
-            typeItem->appendRow(ressourceItem);*/
-            //QLigneArbre * ressourceItem = new QLigneArbre(itP->getID(), itP->getNom());
-            //typeItem->appendRow(ressourceItem);
+            std::stringstream out;
+            out << itP->getID();
+            QString qString = QString::fromStdString(out.str() + " | " + itP->getNom().toStdString());
 
+            QStandardItem * ressourceItem = new QStandardItem(qString);
+            ressourceItem->setEditable(false);
+            typeItem->appendRow(ressourceItem);
         }
     }
     ui->treeViewPersonnel->setModel(standardModel);
     ui->treeViewPersonnel->expandAll();
-
-    statusBar()->showMessage(tr("Connecté"));
 }
 
 MainWindow::~MainWindow()
@@ -80,25 +104,11 @@ void MainWindow::on_actionclient_triggered()
     if(cw->exec()==QDialog::Accepted)
     {
         statusBar()->showMessage(tr("Client ajouté"));
-        if(modelClient!=NULL)
-        {
-            delete modelClient;
-        }
-        modelClient = new QSqlTableModel(this,DB_management::getInstance()->getDb());
-        modelRecherche = new QSqlTableModel(this,DB_management::getInstance()->getDb());
-        modelClient->setTable("TClient");
-        modelClient->select();
-        modelRecherche->setTable("TClient");
-        modelRecherche->select();
-        ui->tableViewClient->setModel(modelClient);
-        ui->tableViewClient->setEditTriggers(QAbstractItemView::NoEditTriggers);
-        ui->tableViewClient_2->setModel(modelRecherche);
-        ui->tableViewClient_2->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        createTableView();
         delete cw;
     }
     else
         statusBar()->showMessage(tr(""));
-
 }
 
 void MainWindow::on_actionQuitter_triggered()
@@ -131,25 +141,25 @@ void MainWindow::on_BouttonRechercherClient_clicked()
         delete modelRecherche;
     }
     modelRecherche = new QSqlTableModel(this,DB_management::getInstance()->getDb());
-    //QSqlQueryModel query;
-    //query.setQuery("SELECT * from Tclient "
-                   //"WHERE Nom LIKE '"+ui->lineNom->text()+"%' OR Prenom LIKE '"+ui->linePrenom->text()+"%' OR DateRdv BETWEEN ‘"+ui->dateRdvDebut->date().toString(QString("yyyy-MM-dd"))+"’ AND ‘"+ui->dateRdvDebut->date().toString(QString("yyyy-MM-dd"))+" OR Id LIKE'"+ui->lineNumeroID->text()+"%'");
-
     modelRecherche->setTable("TClient");
 
-    if(ui->dateRdvDebut->date()>ui->dateRdvFin->date())
+    if(ui->dateRdvDebut->date() > ui->dateRdvFin->date())
     {
-        QMessageBox::warning(this,"Erreur","l'intervalle des dates n'est pas valide");
+        QMessageBox::warning(this,"Erreur","L'intervalle des dates n'est pas valide");
     }
-    if(ui->dateRdvDebut->date().toString(QString("yyyy-MM-dd"))=="2000-01-01" && ui->dateRdvFin->date().toString(QString("yyyy-MM-dd"))=="2000-01-01")
+    if(ui->dateRdvDebut->date().toString(QString("yyyy-MM-dd")) == "2000-01-01" && ui->dateRdvFin->date().toString(QString("yyyy-MM-dd")) == "2000-01-01")
     {
         //les valeurs par défaut n'ont pas été modifié : pas de filtre sur la date
-        modelRecherche->setFilter(QString("Nom LIKE '"+ui->lineNom->text()+"%'AND Prenom LIKE '"+ui->linePrenom->text()+"%' AND Id LIKE '"+ui->lineNumeroID->text()+"%'"));
+        modelRecherche->setFilter(QString("Nom LIKE '"+ui->lineNom->text()+"%'AND Prenom LIKE '" +ui->linePrenom->text()+"%' AND "
+                                          "Id LIKE '"+ui->lineNumeroID->text()+"%'"));
 
     }
     else
     {
-        modelRecherche->setFilter(QString("Nom LIKE '"+ui->lineNom->text()+"%'AND Prenom LIKE '"+ui->linePrenom->text()+"%' AND Id LIKE '"+ui->lineNumeroID->text()+"%'AND DateRdv BETWEEN '"+ui->dateRdvDebut->date().toString(QString("yyyy-MM-dd"))+"' AND '"+ui->dateRdvFin->date().toString(QString("yyyy-MM-dd"))+"'"));
+        //On applique le filtre
+        modelRecherche->setFilter(QString("Nom LIKE '"+ui->lineNom->text()+"%'AND Prenom LIKE '"+ui->linePrenom->text()+"%' AND "
+                                          "Id LIKE '"+ui->lineNumeroID->text()+"%'AND DateRdv BETWEEN '"+ui->dateRdvDebut->date().toString(QString("yyyy-MM-dd"))+""
+                                          "' AND '"+ui->dateRdvFin->date().toString(QString("yyyy-MM-dd"))+"'"));
 
     }
 
@@ -161,28 +171,24 @@ void MainWindow::on_BouttonRechercherClient_clicked()
 
 void MainWindow::on_bouttonModifierPersonnel_clicked()
 {
-    /*QModelIndex index = ui->treeViewPersonnel->currentIndex();
-    QVariant data = ui->treeViewPersonnel->model()->data(index);
-    if(data.canConvert<personnelInfos>())
-        personnelInfos personnel = data.value<personnelInfos>();*/
-    //personnelInfos personnel = qvariant_cast<personnelInfos>(data);
 }
 
 void MainWindow::on_buttonSupprimerPersonnel_clicked()
 {
     QModelIndex index = ui->treeViewPersonnel->currentIndex();
+    index.row();
     if(!index.isValid())
         QMessageBox::warning(this,"Erreur","Veuillez sélectionner un élément");
     else {
-        QVariant data = ui->treeViewPersonnel->currentIndex().data();
-        int id = data.toInt();
-        cPersonnel.supprimerPersonnel(id);
+        QVariant data = ui->treeViewPersonnel->model()->data(index);
+        QString text = data.toString();
 
-        QModelIndexList indexes = ui->treeViewPersonnel->selectionModel()->selectedIndexes();
-        if (indexes.size() > 0) {
-            QModelIndex selectedIndex = indexes.at(0);
-            selectedIndex.data();
-		}
+        if(text.compare("1 | Admin") == 0)
+            QMessageBox::warning(this,"Erreur","Impossible de supprimer l'administrateur !");
+        else{
+            cPersonnel.supprimerPersonnel(text);
+            createTreeView();
+        }
 	}
 }
 
@@ -195,8 +201,8 @@ void MainWindow::on_buttonSupprimerClient_clicked()
     }
 	
     QModelIndex currentindex = ui->tableViewClient_2->currentIndex();
-    qInfo() << ui->tableViewClient_2->model()->data( ui->tableViewClient_2->model()->index(currentindex.row(),0)).toString();
-    qInfo( "C Style Info Message" );
+    qDebug() << ui->tableViewClient_2->model()->data( ui->tableViewClient_2->model()->index(currentindex.row(),0)).toString();
+    qDebug() << "C Style Info Message";
     if(!cClient.supprimerClient(ui->tableViewClient_2->model()->data( ui->tableViewClient_2->model()->index(currentindex.row(),0)).toString()))
     {
         QMessageBox::warning(this,"Erreur","Erreur de suppression");

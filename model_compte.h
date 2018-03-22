@@ -7,13 +7,15 @@
 class ModelCompte
 {
 private :
-int Id;
-int IdRessource;
-QString Login;
-QString Mdp;
+    int Id;
+    int IdRessource;
+    QString Login;
+    QString Mdp;
+
 public:
     ModelCompte();
     ModelCompte(int Id1,int IdRessource1,QString Login1,QString Mdp1);
+
     int getId() const;
     void setId(int value);
     int getIdRessource() const;

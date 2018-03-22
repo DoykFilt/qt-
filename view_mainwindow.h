@@ -12,7 +12,7 @@
 #include <QStatusBar>
 
 namespace Ui {
-class MainWindow;
+    class MainWindow;
 }
 
 class MainWindow : public QMainWindow
@@ -26,20 +26,15 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
 private slots:
     void on_actionclient_triggered();
-
     void on_actionQuitter_triggered();
-
     void on_actionPersonnel_triggered();
-
     void on_actionA_propos_triggered();
-
     void on_BouttonRechercherClient_clicked();
-
     void on_bouttonModifierPersonnel_clicked();
     void on_buttonSupprimerClient_clicked();
-
     void on_buttonSupprimerPersonnel_clicked();
     void on_buttonModifierClient_clicked();
 
@@ -50,6 +45,9 @@ private:
     QSqlTableModel * modelRessource=NULL;
     ControlerClient cClient;
     ControlerPersonnel cPersonnel;
+    void createTableView();
+    void createTreeView();
+
 public :
     QString getId();				
 

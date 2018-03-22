@@ -28,16 +28,18 @@ bool personnelInfos::db_supprimer(){
     DB_management * db = DB_management::getInstance();
 
     QSqlQuery query(db->getDb());
-    query.prepare("Delete From 'TRessource' Where 'Id' = ?");
+    query.prepare("Delete From TRessource Where Id = ?");
     query.addBindValue(getID());
 
     bool result = query.exec();
+    qDebug() << result;
     if(!result)
     {
         qDebug() << query.lastError().text();
         qDebug() << "Ressource non supprimée !\n";
         return false;
     }
+    qDebug() << "Ressource supprimée !\n";
     return true;
 }
 
@@ -117,4 +119,29 @@ bool personnelInfos::db_ajouter(QString nom, QString prenom, int type, QString p
 
     }
     return true;
+}
+
+//Permet de récupérer la liste des ressources
+QVector<personnelInfos> personnelInfos::db_getListPersonnel(bool withoutAdmin){
+
+    QString s;
+    if(withoutAdmin)
+        s = "SELECT Nom, Prenom, Id FROM 'TRessource' WHERE Nom != 'Admin'";
+    else
+        s = "SELECT Nom, Prenom, Id FROM 'TRessource'";
+
+    QSqlQuery * query = new QSqlQuery(DB_management::getInstance()->getDb());
+    QVector<personnelInfos> personnels;
+    if (query->exec(s))
+    {
+        while(query->next())
+        {
+            personnelInfos personnel;
+            personnel.setNom(query->value(0));
+            personnel.setPrenom(query->value(1));
+            personnel.setID(query->value(2));
+            personnels.append(personnel);
+        }
+    delete query;
+    return personnels;
 }

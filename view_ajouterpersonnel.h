@@ -5,7 +5,7 @@
 #include "controler_personnel.h"
 
 namespace Ui {
-class AjouterPersonnel;
+    class AjouterPersonnel;
 }
 
 class AjouterPersonnel : public QDialog
@@ -18,7 +18,6 @@ public:
 
 private slots:
     void on_buttonAnnuler_clicked();
-
     void on_buttonOK_clicked();
 
     void on_comboBoxType_currentIndexChanged(const QString &arg1);

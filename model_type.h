@@ -9,14 +9,15 @@ class Type
 private:
     int id;
     QString label;
+
 public:
     Type(int ID, QString LABEL);
+
     std::vector<personnelInfos> getRessourcesRelatifs();
     QString getLabel() const;
     void setLabel(const QString &value);
     int getId() const;
     void setId(int value);
-
     static std::vector<Type> getListType();
 };
 

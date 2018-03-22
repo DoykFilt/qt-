@@ -5,7 +5,7 @@
 #include "controler_personnel.h"
 
 namespace Ui {
-class ModifPersonnel;
+    class ModifPersonnel;
 }
 
 class ModifPersonnel : public QDialog
@@ -18,7 +18,6 @@ public:
 
 private slots:
     void on_buttonAnnuler_clicked();
-
     void on_buttonOK_clicked();
 
 private:
